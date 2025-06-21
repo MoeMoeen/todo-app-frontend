@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To-Do List App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>📝 To-Do List</h1>
+
+    <!-- To-Do Form -->
+    <form id="todo-form">
+      <input type="text" id="todo-input" placeholder="Enter to-do..." required />
+      <label for="todo-date" class="hidden-label">Due Date</label>
+      <input type="date" id="todo-date" required title="Select due date" placeholder="Due date" />
+      <button type="submit">Add</button>
+    </form>
+
+    <!-- Messages -->
+    <div id="message" class="message"></div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button id="sort-btn">Sort by Date</button>
+      <button id="delete-all-btn">Delete All</button>
+    </div>
+
+    <!-- To-Do List -->
+    <ul id="todo-list"></ul>
+
+    <hr>
+
+    <!-- User Cards -->
+    <h2>👤 Sample Users</h2>
+    <div id="user-cards" class="cards"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
