@@ -112,7 +112,6 @@ function renderTodos() {
     // ---------- STRIKETHROUGH LOGIC ----------
     if (todo.completed) {
       span.classList.add("completed");  // strike through the text
-      // li.classList.add("completed")
     } else {
       span.classList.remove("completed");
     }
