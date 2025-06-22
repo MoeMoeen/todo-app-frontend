@@ -183,17 +183,35 @@ async function toggleCompleted(id, isCompleted) {
 
 async function editTodo(id) {
   const todo = todos.find(t => t.id === id);
-  const newText = prompt("Edit the to-do:", todo.text);
-  const newDate = prompt("Edit the date:", todo.date);
 
-  if (!newText || !newDate) {
-    showMessage("Edit canceled or invalid input.", "error");
+  // Prompt the user to edit the text
+  const newText = prompt("Edit the to-do:", todo.text);
+  if (!newText) {
+    showMessage("Text edit canceled or invalid.", "error");
     return;
   }
 
+  // Prompt to edit the date
+  const newDate = prompt("Edit the date (YYYY-MM-DD):", todo.date);
+  if (!newDate) {
+    showMessage("Date edit canceled or invalid.", "error");
+    return;
+  }
+
+  // Prompt to edit completed status (true/false)
+  const newCompletedInput = prompt("Is it completed? (yes/no)", todo.completed ? "yes" : "no");
+  if (!newCompletedInput) {
+    showMessage("Completed status edit canceled or invalid.", "error");
+    return;
+  }
+
+  const newCompleted = newCompletedInput.trim().toLowerCase() === "yes";
+
+  // Construct the updated to-do object
   const updatedTodo = {
     text: newText.trim(),
-    date: newDate
+    date: newDate,
+    completed: newCompleted
   };
 
   try {
@@ -208,8 +226,9 @@ async function editTodo(id) {
     if (!res.ok) throw new Error("Failed to update to-do");
 
     const data = await res.json();
+
     showMessage("To-do updated ✏️", "success");
-    loadTodos(); // ⬅️ refresh list from backend
+    loadTodos(); // Refresh the list with updated values
   } catch (err) {
     console.error("PUT /todos/{id} failed:", err);
     showMessage("Error updating to-do", "error");
