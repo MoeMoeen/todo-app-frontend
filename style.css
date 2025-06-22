@@ -131,3 +131,8 @@ button:hover {
   overflow-wrap: break-word;     /* Handle soft wrap */
   margin: 0;                      /* Remove extra space */
 }
+
+.completed {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
