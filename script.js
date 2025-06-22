@@ -64,80 +64,103 @@ form.addEventListener("submit", function (e) {
 });
 
 function renderTodos() {
+  // Clear the current list
   list.innerHTML = "";
 
+  // Iterate through all todos and create DOM elements for each
   todos.forEach(todo => {
+    // Create the list item
     const li = document.createElement("li");
 
+    // ---------- CHECKBOX ----------
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.checked = todo.completed;
     checkbox.className = "todo-checkbox";
-    checkbox.addEventListener("change", () => toggleCompleted(todo.id, checkbox.checked));
+    checkbox.checked = todo.completed; // Reflect backend status
+    // When checkbox changes, update backend and UI
+    checkbox.addEventListener("change", () => {
+      toggleCompleted(todo.id, checkbox.checked);
+    });
 
+    // ---------- TODO TEXT ----------
     const span = document.createElement("span");
     span.className = "todo-text";
     span.textContent = todo.text;
 
+    // ---------- DATE ----------
     const date = document.createElement("span");
     date.className = "todo-date";
     date.textContent = todo.date;
 
+    // ---------- ACTION BUTTONS ----------
     const actions = document.createElement("div");
     actions.className = "todo-actions";
 
     const editBtn = document.createElement("button");
     editBtn.textContent = "Edit";
     editBtn.classList.add("edit");
-    editBtn.onclick = () => editTodo(todo.id);
+    editBtn.onclick = () => editTodo(todo.id); // edit function elsewhere
 
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
-    deleteBtn.onclick = () => deleteTodo(todo.id);
+    deleteBtn.classList.add("delete");
+    deleteBtn.onclick = () => deleteTodo(todo.id); // delete function elsewhere
 
     actions.appendChild(editBtn);
     actions.appendChild(deleteBtn);
 
+    // ---------- STRIKETHROUGH LOGIC ----------
+    if (todo.completed) {
+      span.classList.add("completed");  // strike through the text
+    } else {
+      span.classList.remove("completed");
+    }
+
+    // ---------- APPEND ALL TO li ----------
     li.appendChild(checkbox);
     li.appendChild(span);
     li.appendChild(date);
     li.appendChild(actions);
 
-    // Optional: visually indicate completed todos
-    if (todo.completed) {
-      li.classList.add("completed");
-    }
-
+    // Append the list item to the UL
     list.appendChild(li);
   });
 }
 
+
 async function toggleCompleted(id, isCompleted) {
   try {
-    const response = await fetch(`${api_url}/todos/${id}`, {
+    // Find the current todo's text and date
+    const currentTodo = todos.find(todo => todo.id === id);
+
+    // Prepare updated payload with completed status and required fields
+    const updatedTodo = {
+      text: currentTodo.text,
+      date: currentTodo.date,
+      completed: isCompleted
+    };
+
+    // Send PUT request to update the todo on backend
+    const res = await fetch(`${API_URL}${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        completed: isCompleted,
-        text: todos.find(todo => todo.id === id).text,
-        date: todos.find(todo => todo.id === id).date
-      })
+      body: JSON.stringify(updatedTodo)
     });
 
-    if (!response.ok) {
-      throw new Error("Failed to update todo");
-    }
+    if (!res.ok) throw new Error("Failed to update todo");
 
-    const updatedTodo = await response.json();
+    const data = await res.json();
 
-    // Update local state and re-render
-    todos = todos.map(todo => (todo.id === id ? updatedTodo : todo));
+    // Update local todos array to reflect backend state
+    todos = todos.map(todo => (todo.id === id ? data : todo));
+
+    // Re-render the list to update checkbox + strikethrough
     renderTodos();
-
   } catch (err) {
-    console.error("Error toggling completed:", err);
+    console.error("PUT /todos/{id} failed:", err);
+    showMessage("Failed to update todo status", "error");
   }
 }
 
