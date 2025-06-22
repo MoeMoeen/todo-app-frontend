@@ -63,12 +63,17 @@ form.addEventListener("submit", function (e) {
     });
 });
 
-
 function renderTodos() {
   list.innerHTML = "";
 
   todos.forEach(todo => {
     const li = document.createElement("li");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = todo.completed;
+    checkbox.className = "todo-checkbox";
+    checkbox.addEventListener("change", () => toggleCompleted(todo.id, checkbox.checked));
 
     const span = document.createElement("span");
     span.className = "todo-text";
@@ -93,14 +98,48 @@ function renderTodos() {
     actions.appendChild(editBtn);
     actions.appendChild(deleteBtn);
 
+    li.appendChild(checkbox);
     li.appendChild(span);
     li.appendChild(date);
     li.appendChild(actions);
+
+    // Optional: visually indicate completed todos
+    if (todo.completed) {
+      li.classList.add("completed");
+    }
 
     list.appendChild(li);
   });
 }
 
+async function toggleCompleted(id, isCompleted) {
+  try {
+    const response = await fetch(`${api_url}/todos/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        completed: isCompleted,
+        text: todos.find(todo => todo.id === id).text,
+        date: todos.find(todo => todo.id === id).date
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update todo");
+    }
+
+    const updatedTodo = await response.json();
+
+    // Update local state and re-render
+    todos = todos.map(todo => (todo.id === id ? updatedTodo : todo));
+    renderTodos();
+
+  } catch (err) {
+    console.error("Error toggling completed:", err);
+  }
+}
 
 // function editTodo(id) {
 //   const todo = todos.find(t => t.id === id);
