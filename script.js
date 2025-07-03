@@ -6,6 +6,9 @@ const messageBox = document.getElementById("message");
 const sortBtn = document.getElementById("sort-btn");
 const deleteAllBtn = document.getElementById("delete-all-btn");
 const userCardsContainer = document.getElementById("user-cards");
+const insightsBtn = document.getElementById("insights-btn");
+const insightsBox = document.getElementById("insights-box");
+
 const API_URL = 'https://todo-api-n3ds.onrender.com/todos/';
 // const API_URL = 'http://localhost:8000/todos/';
 
@@ -351,5 +354,38 @@ function showMessage(msg, type = "success") {
 //   localStorage.setItem("todos", JSON.stringify(todos));
 // }
 
+insightsBtn.addEventListener("click", async () => {
+  if (todos.length === 0) {
+    showMessage("No to-dos available for insights.", "error");
+    return;
+  }
+
+  // Extract just the text from each todo
+  const taskTexts = todos.map(todo => todo.text);
+
+  try {
+    const res = await fetch("https://todo-api-n3ds.onrender.com/todos/insights", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ tasks: taskTexts })
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to get insights. Status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    insightsBox.textContent = data.insights; // Show insights in the <pre> block
+    showMessage("Smart insights generated ✅", "success");
+
+  } catch (err) {
+    console.error("Insights error:", err);
+    showMessage("Error getting AI insights", "error");
+  }
+});
+
+// Initial fetch to load users
 fetchUsers();
 
