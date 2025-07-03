@@ -136,3 +136,10 @@ button:hover {
   text-decoration: line-through;
   opacity: 0.6;
 }
+
+.insights-box {
+  background: #e9ecef;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
