@@ -149,3 +149,9 @@ button:hover {
   white-space: pre-wrap;  /* Wrap long lines */
   overflow-wrap: break-word;  /* Force break inside long words if needed */
 }
+
+.insightsection {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
