@@ -146,4 +146,6 @@ button:hover {
   box-sizing: border-box;
   word-wrap: break-word;
   padding: 1rem;
+  white-space: pre-wrap;  /* Wrap long lines */
+  overflow-wrap: break-word;  /* Force break inside long words if needed */
 }
