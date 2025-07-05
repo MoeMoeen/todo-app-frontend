@@ -379,7 +379,7 @@ insightsBtn.addEventListener("click", async () => {
 
     const data = await res.json();
     insightsBox.textContent = data.insights; // Show insights in the <pre> block
-    showMessage("Smart insights generated ✅", "success");
+    showMessage("Smart insights generated (DB fetch)✅", "success");
 
   } catch (err) {
     console.error("Insights fetch error:", err);
