@@ -156,3 +156,28 @@ button:hover {
   margin: 0 auto;
 
 }
+
+.ai-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+  justify-content: space-between;
+}
+
+#insights-btn,
+#clear-insights-btn {
+  padding: 8px 14px;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#insights-btn:hover,
+#clear-insights-btn:hover {
+  background-color: #0056b3;
+}

@@ -8,6 +8,7 @@ const deleteAllBtn = document.getElementById("delete-all-btn");
 const userCardsContainer = document.getElementById("user-cards");
 const insightsBtn = document.getElementById("insights-btn");
 const insightsBox = document.getElementById("insights-box");
+const clearInsightsBtn = document.getElementById("clear-insights-btn");
 
 const API_URL = 'https://todo-api-n3ds.onrender.com/todos/';
 // const API_URL = 'http://localhost:8000/todos/';
@@ -16,7 +17,7 @@ const savedinsights = localStorage.getItem("ai_insights");
 if (savedinsights) {
   insightsBox.textContent = savedinsights; // Show saved insights on page load
 } else {
-  insightsBox.textContent = "No insights generated yet. Click 'Get Insights' to generate.";
+  insightsBox.textContent = "No AI insights generated yet. Click 'Get Insights' to generate.";
 }
 
 // Initialize an empty array to hold todos
@@ -395,6 +396,12 @@ insightsBtn.addEventListener("click", async () => {
     console.error("Insights fetch error:", err);
     showMessage("Error getting AI insights", "error");
   }
+});
+
+clearInsightsBtn.addEventListener("click", () => {
+  localStorage.removeItem("ai_insights");
+  insightsBox.textContent = "No AI insights generated yet. Click 'Get AI Insights' to generate.";
+  showMessage("AI insights cleared 🧹", "success");
 });
 
 // Initial fetch to load users
