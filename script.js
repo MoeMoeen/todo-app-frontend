@@ -12,6 +12,15 @@ const insightsBox = document.getElementById("insights-box");
 const API_URL = 'https://todo-api-n3ds.onrender.com/todos/';
 // const API_URL = 'http://localhost:8000/todos/';
 
+const savedinsights = localStorage.getItem("ai_insights");
+if (savedinsights) {
+  insightsBox.textContent = savedinsights; // Show saved insights on page load
+} else {
+  insightsBox.textContent = "No insights generated yet. Click 'Get Insights' to generate.";
+}
+
+// Initialize an empty array to hold todos
+// This will be populated from the backend
 let todos = [];
 
 function loadTodos() {
@@ -379,6 +388,7 @@ insightsBtn.addEventListener("click", async () => {
 
     const data = await res.json();
     insightsBox.textContent = data.insights; // Show insights in the <pre> block
+    localStorage.setItem("ai_insights", data.insights); // Store insights in localStorage
     showMessage("Smart insights generated (DB fetch)✅", "success");
 
   } catch (err) {
