@@ -355,22 +355,23 @@ function showMessage(msg, type = "success") {
 // }
 
 insightsBtn.addEventListener("click", async () => {
-  if (todos.length === 0) {
-    showMessage("No to-dos available for insights.", "error");
-    return;
-  }
+  
+  // if (todos.length === 0) {
+  //   showMessage("No to-dos available for insights.", "error");
+  //   return;
+  // }
 
   // Extract just the text from each todo
-  const taskTexts = todos.map(todo => todo.text);
+  // const taskTexts = todos.map(todo => todo.text);
 
   try {
-    const res = await fetch("https://todo-api-n3ds.onrender.com/todos/insights", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ tasks: taskTexts })
-    });
+    const res = await fetch("https://todo-api-n3ds.onrender.com/todos/insights");
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({ tasks: taskTexts })
+    // });
 
     if (!res.ok) {
       throw new Error(`Failed to get insights. Status: ${res.status}`);
@@ -381,7 +382,7 @@ insightsBtn.addEventListener("click", async () => {
     showMessage("Smart insights generated ✅", "success");
 
   } catch (err) {
-    console.error("Insights error:", err);
+    console.error("Insights fetch error:", err);
     showMessage("Error getting AI insights", "error");
   }
 });
